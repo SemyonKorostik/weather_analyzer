@@ -1,16 +1,17 @@
 package com.example.weatherapp.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Builder
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "weather")
 public class Weather {
@@ -38,7 +39,7 @@ public class Weather {
     private String location;
 
     @Column(name = "create_date", nullable = false)
-    private Instant createDate;
+    private LocalDateTime createDate;
 
     @Override
     public boolean equals(Object o) {
