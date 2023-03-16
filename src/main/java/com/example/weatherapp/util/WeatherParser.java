@@ -32,6 +32,6 @@ public class WeatherParser {
     }
 
     private Integer toMetersPerHour(double kilometersPerHour) {
-        return (int) (kilometersPerHour * 1000);
+        return (int) Math.round(kilometersPerHour * 1000);
     }
 }

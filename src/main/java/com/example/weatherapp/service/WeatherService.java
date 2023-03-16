@@ -1,5 +1,7 @@
 package com.example.weatherapp.service;
 
+import com.example.weatherapp.dto.AverageTemperature;
+import com.example.weatherapp.dto.DateRange;
 import com.example.weatherapp.dto.WeatherDto;
 import com.example.weatherapp.entity.Weather;
 import com.example.weatherapp.exception.WeatherAPIRequestException;
@@ -15,6 +17,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @Service
@@ -32,6 +36,16 @@ public class WeatherService {
 
     public WeatherDto getLatestForecast() {
         return WeatherMapper.toDto(weatherRepository.findWithLatestDate());
+    }
+
+    public AverageTemperature calcAverage(DateRange range) {
+        LocalDateTime from = LocalDateTime.of(range.getFrom(), LocalTime.MIN);
+        LocalDateTime to = LocalDateTime.of(range.getTo(), LocalTime.MAX);
+        return new AverageTemperature((int) Math.round(weatherRepository.findByCreateDateBetween(from, to)
+                .stream()
+                .mapToInt(Weather::getTemperature)
+                .average()
+                .orElseThrow()));
     }
 
     @Scheduled(fixedRateString = "${fixedRate.in.milliseconds}")
