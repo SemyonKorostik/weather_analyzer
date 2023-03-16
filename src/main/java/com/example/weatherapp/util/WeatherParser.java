@@ -11,11 +11,11 @@ import java.time.format.DateTimeFormatter;
 
 @UtilityClass
 public class WeatherParser {
-    private final String datePattern = "yyyy-MM-dd HH:mm";
+    private final String DATE_PATTERN = "yyyy-MM-dd HH:mm";
 
     public Weather parse(String json) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        DateTimeFormatter pattern = DateTimeFormatter.ofPattern(datePattern);
+        DateTimeFormatter pattern = DateTimeFormatter.ofPattern(DATE_PATTERN);
         JsonNode allNodes = mapper.readTree(json);
         JsonNode locationNode = allNodes.get("location");
         JsonNode currentNode = allNodes.get("current");
