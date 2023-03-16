@@ -1,8 +1,10 @@
 package com.example.weatherapp.service;
 
+import com.example.weatherapp.dto.WeatherDto;
 import com.example.weatherapp.entity.Weather;
 import com.example.weatherapp.exception.WeatherAPIRequestException;
 import com.example.weatherapp.repository.WeatherRepository;
+import com.example.weatherapp.util.WeatherMapper;
 import com.example.weatherapp.util.WeatherParser;
 import lombok.RequiredArgsConstructor;
 import okhttp3.OkHttpClient;
@@ -27,6 +29,10 @@ public class WeatherService {
     private String apiHostValue;
     private final static String API_KEY = "X-RapidAPI-Key";
     private final static String API_HOST = "X-RapidAPI-Host";
+
+    public WeatherDto getLatestForecast() {
+        return WeatherMapper.toDto(weatherRepository.findWithLatestDate());
+    }
 
     @Scheduled(fixedRateString = "${fixedRate.in.milliseconds}")
     private void saveCurrentWeather() {
