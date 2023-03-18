@@ -5,11 +5,14 @@ import com.example.weatherapp.exception.WeatherAPIRequestException;
 import com.example.weatherapp.handler.ApiError;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +27,24 @@ public class ExceptionController {
     @ExceptionHandler(WeatherAPIRequestException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiError weatherAPIRequestException(WeatherAPIRequestException exception) {
+        return new ApiError(exception.getMessage());
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError dateTimeParseException(DateTimeParseException exception) {
+        return new ApiError(exception.getMessage());
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
+        return new ApiError(exception.getMessage());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError httpMessageNotReadableException(HttpMessageNotReadableException exception) {
         return new ApiError(exception.getMessage());
     }
 
