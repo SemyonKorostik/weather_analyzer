@@ -20,13 +20,13 @@ public class Weather {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "temperature", nullable = false)
+    @Column(name = "temp_c", nullable = false)
     private Integer temperature;
 
-    @Column(name = "wind_speed", nullable = false)
-    private Integer windSpeed;
+    @Column(name = "wind_speed_mph", nullable = false)
+    private Double windSpeed;
 
-    @Column(name = "pressure", nullable = false)
+    @Column(name = "pressure_mb", nullable = false)
     private Integer pressure;
 
     @Column(name = "humidity", nullable = false)

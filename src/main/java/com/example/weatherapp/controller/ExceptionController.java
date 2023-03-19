@@ -1,7 +1,7 @@
 package com.example.weatherapp.controller;
 
 import com.example.weatherapp.exception.InvalidDateRange;
-import com.example.weatherapp.exception.WeatherAPIRequestException;
+import com.example.weatherapp.exception.NoWeatherInformation;
 import com.example.weatherapp.handler.ApiError;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -24,12 +24,6 @@ public class ExceptionController {
         return new ApiError(exception.getMessage());
     }
 
-    @ExceptionHandler(WeatherAPIRequestException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiError weatherAPIRequestException(WeatherAPIRequestException exception) {
-        return new ApiError(exception.getMessage());
-    }
-
     @ExceptionHandler(DateTimeParseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError dateTimeParseException(DateTimeParseException exception) {
@@ -45,6 +39,12 @@ public class ExceptionController {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError httpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        return new ApiError(exception.getMessage());
+    }
+
+    @ExceptionHandler(NoWeatherInformation.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError noWeatherInformation(NoWeatherInformation exception) {
         return new ApiError(exception.getMessage());
     }
 

@@ -22,16 +22,12 @@ public class WeatherParser {
         JsonNode conditionNode = currentNode.get("condition");
         return Weather.builder()
                 .temperature(currentNode.get("temp_c").asInt())
-                .windSpeed(toMetersPerHour(currentNode.get("wind_kph").asDouble()))
+                .windSpeed(currentNode.get("wind_mph").asDouble())
                 .pressure(currentNode.get("pressure_mb").asInt())
                 .humidity(currentNode.get("humidity").asInt())
                 .createDate(LocalDateTime.parse(currentNode.get("last_updated").asText(), pattern))
                 .condition(conditionNode.get("text").asText())
                 .location(locationNode.get("name").asText())
                 .build();
-    }
-
-    private Integer toMetersPerHour(double kilometersPerHour) {
-        return (int) Math.round(kilometersPerHour * 1000);
     }
 }
