@@ -14,6 +14,6 @@ public class ScheduledTasks {
 
     @Scheduled(fixedRateString = "${fixedRate.in.milliseconds}")
     public void executeWeatherSaving() {
-        weatherService.saveCurrentWeather();
+        weatherService.saveCurrentWeatherFromApi();
     }
 }

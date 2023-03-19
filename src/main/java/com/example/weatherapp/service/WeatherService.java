@@ -9,5 +9,5 @@ public interface WeatherService {
 
     AverageTemperature calcAverage(DateRange range);
 
-    void saveCurrentWeather();
+    void saveCurrentWeatherFromApi();
 }

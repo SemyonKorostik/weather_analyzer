@@ -1,7 +1,7 @@
 package com.example.weatherapp.service.impl;
 
 import com.example.weatherapp.dto.DateRange;
-import com.example.weatherapp.exception.InvalidDateRange;
+import com.example.weatherapp.exception.InvalidDateRangeException;
 import com.example.weatherapp.service.WeatherValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ public class WeatherValidationServiceImpl implements WeatherValidationService {
     @Override
     public void validateDateRange(DateRange range) {
         if (range.getFrom().isAfter(range.getTo())) {
-            throw new InvalidDateRange();
+            throw new InvalidDateRangeException();
         }
     }
 }

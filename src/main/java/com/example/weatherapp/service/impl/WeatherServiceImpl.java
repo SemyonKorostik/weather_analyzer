@@ -4,12 +4,13 @@ import com.example.weatherapp.dto.AverageTemperature;
 import com.example.weatherapp.dto.DateRange;
 import com.example.weatherapp.dto.WeatherDto;
 import com.example.weatherapp.entity.Weather;
-import com.example.weatherapp.exception.NoWeatherInformation;
+import com.example.weatherapp.exception.EmptyWeatherRepositoryException;
+import com.example.weatherapp.exception.NoWeatherInformationException;
 import com.example.weatherapp.exception.WeatherAPIRequestException;
+import com.example.weatherapp.mapper.WeatherMapper;
 import com.example.weatherapp.repository.WeatherRepository;
 import com.example.weatherapp.service.WeatherService;
 import com.example.weatherapp.service.WeatherValidationService;
-import com.example.weatherapp.mapper.WeatherMapper;
 import com.example.weatherapp.util.WeatherParser;
 import lombok.RequiredArgsConstructor;
 import okhttp3.OkHttpClient;
@@ -40,6 +41,9 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public WeatherDto getLatestForecast() {
+        if(weatherRepository.findAll().isEmpty()){
+            throw new EmptyWeatherRepositoryException();
+        }
         return weatherMapper.toDto(weatherRepository.findWithLatestDate());
     }
 
@@ -48,8 +52,8 @@ public class WeatherServiceImpl implements WeatherService {
         weatherValidationService.validateDateRange(range);
         LocalDateTime from = LocalDateTime.of(range.getFrom(), LocalTime.MIN);
         LocalDateTime to = LocalDateTime.of(range.getTo(), LocalTime.MAX);
-        if(!weatherRepository.existsByCreateDate(from)) {
-            throw new NoWeatherInformation(range.getFrom().toString());
+        if (!weatherRepository.existsByCreateDateBetween(from, from.plusDays(1))) {
+            throw new NoWeatherInformationException(range.getFrom().toString());
         }
         return new AverageTemperature((int) Math.round(weatherRepository.findByCreateDateBetween(from, to)
                 .stream()
@@ -59,7 +63,14 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public void saveCurrentWeather() {
+    public void saveCurrentWeatherFromApi() {
+        Weather weather = getWeatherFromAPI();
+        if (!weatherRepository.existsByCreateDate(weather.getCreateDate())) {
+            weatherRepository.save(weather);
+        }
+    }
+
+    private Weather getWeatherFromAPI() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(urlTemplate + location)
@@ -73,8 +84,6 @@ public class WeatherServiceImpl implements WeatherService {
         } catch (Exception e) {
             throw new WeatherAPIRequestException(e.getMessage());
         }
-        if (!weatherRepository.existsByCreateDate(weather.getCreateDate())) {
-            weatherRepository.save(weather);
-        }
+        return weather;
     }
 }
