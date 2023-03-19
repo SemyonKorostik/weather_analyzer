@@ -1,7 +1,8 @@
 package com.example.weatherapp.controller;
 
-import com.example.weatherapp.exception.InvalidDateRange;
-import com.example.weatherapp.exception.NoWeatherInformation;
+import com.example.weatherapp.exception.EmptyWeatherRepositoryException;
+import com.example.weatherapp.exception.InvalidDateRangeException;
+import com.example.weatherapp.exception.NoWeatherInformationException;
 import com.example.weatherapp.handler.ApiError;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,9 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class ExceptionController {
-    @ExceptionHandler(InvalidDateRange.class)
+    @ExceptionHandler(InvalidDateRangeException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiError invalidDateRange(InvalidDateRange exception) {
+    public ApiError invalidDateRange(InvalidDateRangeException exception) {
         return new ApiError(exception.getMessage());
     }
 
@@ -42,9 +43,15 @@ public class ExceptionController {
         return new ApiError(exception.getMessage());
     }
 
-    @ExceptionHandler(NoWeatherInformation.class)
+    @ExceptionHandler(NoWeatherInformationException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiError noWeatherInformation(NoWeatherInformation exception) {
+    public ApiError noWeatherInformation(NoWeatherInformationException exception) {
+        return new ApiError(exception.getMessage());
+    }
+
+    @ExceptionHandler(EmptyWeatherRepositoryException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError emptyWeatherRepositoryException(EmptyWeatherRepositoryException exception) {
         return new ApiError(exception.getMessage());
     }
 
