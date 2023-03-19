@@ -3,14 +3,14 @@
 ## Endpoints
 
 ### Get information about the current weather 
-
-url: /api/weather/current
+* GET method
+* url: /api/weather/current
 
 ### Get information about the average daily temperature for the specified period
 
-url: /api/weather/average/temp
-
-body: {
+* POST method
+* url: /api/weather/average/temp
+* body: {
 "from": "dd-mm-yyyy",
 "to": "dd-mm-yyyy"
 }
