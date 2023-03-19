@@ -87,11 +87,13 @@ class WeatherServiceImplTest {
                 .build();
         DateRange range = new DateRange(LocalDate.now(), LocalDate.now());
         Mockito.doNothing().when(weatherValidationService).validateDateRange(Mockito.any());
-        Mockito.when(weatherRepository.existsByCreateDate(Mockito.any())).thenReturn(Boolean.TRUE);
-        Mockito.when(weatherRepository.findByCreateDateBetween(Mockito.any(), Mockito.any())).thenReturn(List.of(weather1, weather2));
+        Mockito.when(weatherRepository.existsByCreateDateBetween(Mockito.any(), Mockito.any()))
+                .thenReturn(Boolean.TRUE);
+        Mockito.when(weatherRepository.findByCreateDateBetween(Mockito.any(), Mockito.any()))
+                .thenReturn(List.of(weather1, weather2));
         Assertions.assertEquals(average, weatherService.calcAverage(range).getAverage_temp());
         Mockito.verify(weatherValidationService).validateDateRange(Mockito.any());
-        Mockito.verify(weatherRepository).existsByCreateDate(Mockito.any());
+        Mockito.verify(weatherRepository).existsByCreateDateBetween(Mockito.any(), Mockito.any());
         Mockito.verify(weatherRepository).findByCreateDateBetween(Mockito.any(), Mockito.any());
     }
 
@@ -99,10 +101,11 @@ class WeatherServiceImplTest {
     void calcAverageThenShouldThrowException() {
         DateRange range = new DateRange(LocalDate.now(), LocalDate.now());
         Mockito.doNothing().when(weatherValidationService).validateDateRange(Mockito.any());
-        Mockito.when(weatherRepository.existsByCreateDate(Mockito.any())).thenReturn(Boolean.FALSE);
+        Mockito.when(weatherRepository.existsByCreateDateBetween(Mockito.any(), Mockito.any()))
+                .thenReturn(Boolean.FALSE);
         Assertions.assertThrows(NoWeatherInformationException.class, () -> weatherService.calcAverage(range));
         Mockito.verify(weatherValidationService).validateDateRange(Mockito.any());
-        Mockito.verify(weatherRepository).existsByCreateDate(Mockito.any());
+        Mockito.verify(weatherRepository).existsByCreateDateBetween(Mockito.any(), Mockito.any());
     }
 
 }
